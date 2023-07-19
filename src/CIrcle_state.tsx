@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { styled } from "styled-components";
 
 ///styled component에 props로 넘어오는것에 대한 타입
@@ -17,14 +18,7 @@ const Container = styled.div<ContainerProps>`
   border: 20px solid ${(props) => props.borderColor};
 `;
 
-///아래의 두 함수가 무엇이 다른걸까?
-// export default function Circle({ bgColor }: CircleProps) {
-//   return <Container bgColor={bgColor} />;
-// }
 export default function Circle({ bgColor, borderColor }: CircleProps) {
-  // return <Container bgcolor={bgColor} borderColor={borderColor} />;
-  ///props의 타입이 string|undefined로 되어있지만 styledcomponent의 type은 무조건 값이 있어야한다.
-  /// 그러기 때문에 아래와 같이 default값을 설정할 수 있다
-  ///✔️optional props
+  const [counter, setCounter] = useState(1);
   return <Container bgcolor={bgColor} borderColor={borderColor ?? "yellow"} />;
 }

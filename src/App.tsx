@@ -1,20 +1,20 @@
 import { styled } from "styled-components";
 import Circle from "./Circle";
+import { useState } from "react";
+
+const Container = styled.div`
+  background-color: ${(props) => props.theme.backgroundColor};
+`;
+const H1 = styled.h1`
+  color: ${(props) => props.theme.textColor};
+`;
 
 function App() {
   return (
     <div className="App">
-      app
-      {/* {/* <Circle bgColor="teal"></Circle> */}
-      <Circle bgColor="teal" borderColor="black"></Circle>
-      <Circle bgColor="teal"></Circle>
-      {/* <Wrapper> */}
-      {/* <Box bgColor="teal">box</Box> */}
-      {/* 3.prop으로 html tag 보내는 방법 */}
-      {/* <Circle as="span">circleddd</Circle> */}
-      {/* <Input /> */}
-      {/* <Animation></Animation> */}
-      {/* </Wrapper> */}
+      <Container>
+        <H1>안녕하세요</H1>
+      </Container>
     </div>
   );
 }
