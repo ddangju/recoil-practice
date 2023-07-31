@@ -6,7 +6,8 @@ import "styled-components";
 // styled-compoments 테마 정의를 확장하는 방법
 declare module "styled-components" {
   export interface DefaultTheme {
+    bgColor: string;
     textColor: string;
-    backgroundColor: string;
+    accentColor: string;
   }
 }

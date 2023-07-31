@@ -2,21 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "styled-components";
 import App from "./App";
-import { lightTheme } from "./theme";
+import { theme } from "./theme";
+import { RouterProvider } from "react-router-dom";
+import router from "./Router";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
-// const darkTheme = {
-//   textColor: "whitesmoke",
-//   backgroundColor: "#111",
-// };
-
-// const lightTheme = {
-//   textColor: "#111",
-//   backgroundColor: "whitesmoke",
-// };
 root.render(
-  <ThemeProvider theme={lightTheme}>
+  <ThemeProvider theme={theme}>
+    <RouterProvider router={router}></RouterProvider>
+
     <App />
   </ThemeProvider>
 );
