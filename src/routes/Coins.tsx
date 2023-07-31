@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 const Container = styled.div`
   padding: 0px 20px;
-  max-widht: 480px;
+  max-width: 480px;
   margin: 0 auto;
 `;
 const Header = styled.header`
@@ -19,7 +19,9 @@ const Coin = styled.li`
   color: ${(props) => props.theme.bgColor};
   margin-bottom: 10px;
   border-radius: 15px;
-
+  display: flex;
+  align-items: center;
+  padding: 10px;
   &:hover {
     a {
       color: ${(props) => props.theme.accentColor};
@@ -40,6 +42,10 @@ const Loader = styled.div`
   text-align: center;
   color: ${(props) => props.theme.accentColor};
 `;
+const Img = styled.img`
+  width: 50px;
+  height: 50px;
+`;
 
 interface CoinInterface {
   id: string;
@@ -57,7 +63,7 @@ function Coins() {
     (async () => {
       const response = await fetch("https://api.coinpaprika.com/v1/coins");
       const json = await response.json();
-      setCoins(json.slice(0, 100));
+      setCoins(json.slice(0, 50));
       setLoading(false);
     })();
   }, []);
@@ -74,7 +80,13 @@ function Coins() {
           ) : (
             coins.map((coin, idx) => (
               <Coin key={coin.id}>
-                <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+                <Img
+                  alt="img"
+                  src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
+                />
+                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+                  {coin.name} &rarr;
+                </Link>
               </Coin>
             ))
           )}
