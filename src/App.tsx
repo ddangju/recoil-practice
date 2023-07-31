@@ -1,21 +1,29 @@
-import { styled } from "styled-components";
-import Circle from "./Circle";
-import { useState } from "react";
+import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
 
-const Container = styled.div`
-  background-color: ${(props) => props.theme.backgroundColor};
-`;
-const H1 = styled.h1`
-  color: ${(props) => props.theme.textColor};
+const GlobalStyle = createGlobalStyle`
+${reset}
+  * {
+    box-sizing: border-box;
+
+  }
+  body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.textColor};
+    line-height: 1;
+  }
+  a {
+    text-decoration:none;
+    color:inherit;
+  }
 `;
 
-function App() {
+function App({ theme }: any) {
   return (
-    <div className="App">
-      <Container>
-        <H1>안녕하세요</H1>
-      </Container>
-    </div>
+    <>
+      <GlobalStyle />
+    </>
   );
 }
 
