@@ -1,12 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ThemeProvider } from "styled-components";
 import App from "./App";
-import { theme } from "./theme";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import { ReactQueryDevtools } from "react-query/devtools";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -20,9 +18,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
       <RouterProvider router={router}></RouterProvider>
-      <App />
-    </ThemeProvider>
+      {/* <App /> */}
+      <ReactQueryDevtools initialIsOpen={false}/>
+
   </QueryClientProvider>
 );

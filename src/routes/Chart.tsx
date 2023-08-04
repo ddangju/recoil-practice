@@ -12,8 +12,7 @@ export interface ChartProps{
 
 function Chart() {
   const {state}  = useLocation();
-  const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", state], () => fetchCoinHistory(state))
-  ///
+  const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", state[0]], () => fetchCoinHistory(state[0]))
   const [priceData, setPriceData] = useState<IHistorical[]>([]);
 
   useEffect(()=>{
@@ -40,7 +39,7 @@ function Chart() {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: state[1],
             },
             chart: {
               height: 300,

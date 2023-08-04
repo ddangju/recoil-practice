@@ -1,4 +1,4 @@
-import { useLocation, useParams, Link, Outlet, useMatch } from "react-router-dom";
+import { useLocation, useParams, Link, Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { InfoData, RouteState, PriceData } from "../types/CoinType";
@@ -22,10 +22,6 @@ const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
 `;
 
-const Loader = styled.div`
-  text-align: center;
-  color: ${(props) => props.theme.accentColor};
-`;
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
@@ -71,10 +67,14 @@ const Tab = styled.span<{ $isActive: boolean }>`
 `;
 
 
-
-
 function Coin() {
+  // const {isDark} = useOutletContext<ICoinProps>();
+
   const { state } = useLocation() as RouteState;
+  console.log(state,"<state")
+
+
+
   const { coinId } = useParams();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
@@ -82,16 +82,24 @@ function Coin() {
 // fetch함ㅅ에 인자가 필요하다면 아래왁 같이 작성해주어야함
   const { isLoading:infoLoading, data:infoData } = useQuery<InfoData>(["info",coinId], () => fetchCoin(coinId));
   const { isLoading:tickersLoading, data:tickersData } = useQuery<PriceData>(["tickers",coinId], () => fetchTickers(coinId));
-
+  
   const loading = infoLoading || tickersLoading;
+
+  const navigate = useNavigate()
+  const onClick = () =>{
+    navigate("/")
+  }
+
+  
   return (
     <Container>
       <Helmet>
-        <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+        <title>{state?.name ? state?.name : loading ? "Loading..." : infoData?.name}</title>
       </Helmet>
       <Header>
+        <button onClick={onClick}>back</button>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
         <Overview>
@@ -119,12 +127,12 @@ function Coin() {
             <span>{tickersData?.max_supply}</span>
           </OverviewItem>
         </Overview>
-        <Tabs>
+        <Tabs>x
             <Tab $isActive={priceMatch !== null}>
               <Link to="price">price</Link>
             </Tab>
             <Tab $isActive={chartMatch !== null}>
-              <Link to="chart" state={coinId}>chart</Link>
+              <Link to="chart" state={[coinId, state.isdark]}>chart</Link>
             </Tab>
           </Tabs>
         <Outlet></Outlet>

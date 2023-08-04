@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { ICoin } from "../types/Coin";
 import {Helmet} from "react-helmet";
+import { useOutletContext } from 'react-router-dom';
+
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -19,14 +21,16 @@ const Header = styled.header`
   align-items: center;
 `;
 const CoinsList = styled.ul``;
+
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
   display: flex;
   align-items: center;
   padding: 10px;
+  border: 1px solid white;
   &:hover {
     a {
       color: ${(props) => props.theme.accentColor};
@@ -52,17 +56,16 @@ const Img = styled.img`
   height: 50px;
 `;
 
+interface IToggle{
+  toggleDark: () => void,
+}
+interface ICoinProps {
+  isDark: boolean;
+}
+
 function Coins() {
-  // const [coins, setCoins] = useState<CoinInterface[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch("https://api.coinpaprika.com/v1/coins");
-  //     const json = await response.json();
-  //     setCoins(json.slice(0, 50));
-  //     setLoading(false);
-  //   })();
-  // }, []);
+  const {toggleDark} = useOutletContext<IToggle>();
+  const {isDark} = useOutletContext<ICoinProps>();
 
   ///react query apply
   // useQuery(queryKey, fetchPosts)
@@ -71,10 +74,11 @@ function Coins() {
   return (
     <Container>
       <Helmet>
-        COin
+        Coin
       </Helmet>
       <Header>
         <Title>coins</Title>
+        <button onClick={toggleDark}>toggle</button>
       </Header>
       {
         <CoinsList>
@@ -87,7 +91,7 @@ function Coins() {
                   alt="img"
                   src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                 />
-                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+                <Link to={`/${coin.id}`} state={{ name: coin.name, isdark: isDark}}>
                   {coin.name} &rarr;
                 </Link>
               </Coin>
