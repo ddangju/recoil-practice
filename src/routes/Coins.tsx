@@ -5,6 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { ICoin } from "../types/Coin";
+import {Helmet} from "react-helmet";
+
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
@@ -14,7 +16,7 @@ const Header = styled.header`
   height: 10vh;
   display: flex;
   justify-content: center;
-  align-item: center;
+  align-items: center;
 `;
 const CoinsList = styled.ul``;
 const Coin = styled.li`
@@ -64,11 +66,13 @@ function Coins() {
 
   ///react query apply
   // useQuery(queryKey, fetchPosts)
-  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins,{refetchOnWindowFocus:false});
 
-  console.log(data, "<data");
   return (
     <Container>
+      <Helmet>
+        COin
+      </Helmet>
       <Header>
         <Title>coins</Title>
       </Header>

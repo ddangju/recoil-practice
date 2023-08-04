@@ -1,13 +1,10 @@
-import {
-  useLocation,
-  useParams,
-  Link,
-  Outlet,
-  useMatch,
-} from "react-router-dom";
+import { useLocation, useParams, Link, Outlet, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ITag, InfoData, RouteState, PriceData } from "../types/CoinType";
+import { InfoData, RouteState, PriceData } from "../types/CoinType";
+import { useQuery } from "react-query";
+import { fetchCoin, fetchTickers } from "../api";
+import {Helmet} from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -50,6 +47,7 @@ const OverviewItem = styled.div`
 const Description = styled.p`
   margin: 20px 0px;
 `;
+
 const Tabs = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -71,79 +69,67 @@ const Tab = styled.span<{ $isActive: boolean }>`
     display: block;
   }
 `;
+
+
+
+
 function Coin() {
-  const [loading, setLoading] = useState(true);
   const { state } = useLocation() as RouteState;
   const { coinId } = useParams();
-  const [coin, setCoin] = useState();
-  const [info, setInfo] = useState<InfoData>();
-  const [priceInfo, setPriceInfo] = useState<PriceData>();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
+  // const { isLoading, data } = useQuery<InfoData[]>(["info",coinId], fetchCoin(coinId),{refetchOnWindowFocus:false});
+// fetch함ㅅ에 인자가 필요하다면 아래왁 같이 작성해주어야함
+  const { isLoading:infoLoading, data:infoData } = useQuery<InfoData>(["info",coinId], () => fetchCoin(coinId));
+  const { isLoading:tickersLoading, data:tickersData } = useQuery<PriceData>(["tickers",coinId], () => fetchTickers(coinId));
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]);
-
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
+      <Helmet>
+        <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+      </Helmet>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
-      {loading ? (
-        <Loader>Loading...</Loader>
-      ) : (
-        <>
-          <Overview>
-            <OverviewItem>
-              <span>Rank:</span>
-              <span>{info?.rank}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Symbol:</span>
-              <span>${info?.symbol}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
-            </OverviewItem>
-          </Overview>
-          <Description>{info?.description}</Description>
-          <Overview>
-            <OverviewItem>
-              <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
-            </OverviewItem>
-          </Overview>
-          <Tabs>
+        <Overview>
+          <OverviewItem>
+            <span>Rank:</span>
+            <span>{infoData?.rank}</span>
+          </OverviewItem>
+          <OverviewItem>
+            <span>Symbol:</span>
+            <span>${infoData?.symbol}</span>
+          </OverviewItem>
+          <OverviewItem>
+            <span>Price:</span>
+            <span>${tickersData?.quotes.USD.price.toFixed(0)}</span>
+          </OverviewItem>
+        </Overview>
+        <Description>{infoData?.description}</Description>
+        <Overview>
+          <OverviewItem>
+            <span>Total Supply:</span>
+            <span>{tickersData?.total_supply}</span>
+          </OverviewItem>
+          <OverviewItem>
+            <span>Max Supply:</span>
+            <span>{tickersData?.max_supply}</span>
+          </OverviewItem>
+        </Overview>
+        <Tabs>
             <Tab $isActive={priceMatch !== null}>
               <Link to="price">price</Link>
             </Tab>
             <Tab $isActive={chartMatch !== null}>
-              <Link to="chart">chart</Link>
+              <Link to="chart" state={coinId}>chart</Link>
             </Tab>
           </Tabs>
-
-          <Outlet></Outlet>
-        </>
-      )}
+        <Outlet></Outlet>
     </Container>
+
   );
 }
 
