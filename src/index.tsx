@@ -5,15 +5,18 @@ import App from "./App";
 import { theme } from "./theme";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
+import { QueryClient, QueryClientProvider } from "react-query";
 
+const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 root.render(
-  <ThemeProvider theme={theme}>
-    <RouterProvider router={router}></RouterProvider>
-
-    <App />
-  </ThemeProvider>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router}></RouterProvider>
+      <App />
+    </ThemeProvider>
+  </QueryClientProvider>
 );
