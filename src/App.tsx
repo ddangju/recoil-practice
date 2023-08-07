@@ -1,9 +1,10 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
-
-
-
-
+import { darkTheme, lightTheme } from "./theme";
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./store/atoms";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -25,10 +26,22 @@ ${reset}
 `;
 
 function App() {
+  // const [isDark, setIsDark] = useState(true);
+
+  // const toggleDark = () => {
+  //   setIsDark((current) => !current)
+  // };
+  const isDark = useRecoilValue(isDarkAtom);
   return (
-    <>
+    <>    
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      {/* <button onClick={toggleDark}>Toggle Mode app</button> */}
+
+      <Outlet/>
+      {/* <Outlet context={{toggleDark, isDark}}/> */}
       <GlobalStyle/>
-    </>
+    </ThemeProvider>
+    </>    
   );
 }
 

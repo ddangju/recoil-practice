@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ThemeProvider } from "styled-components";
 import App from "./App";
-import { theme } from "./theme";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { RecoilRoot } from "recoil";
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,10 +20,11 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router}></RouterProvider>
-      <App />
-    </ThemeProvider>
-  </QueryClientProvider>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router}></RouterProvider>
+    {/* <App /> */}
+    <ReactQueryDevtools initialIsOpen={false}/>
+    </QueryClientProvider>
+  </RecoilRoot>
 );

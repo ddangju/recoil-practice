@@ -1,6 +1,7 @@
 export interface RouteState {
   state: {
     name: string;
+    isdark: boolean;
   };
 }
 

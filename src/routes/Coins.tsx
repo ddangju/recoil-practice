@@ -1,11 +1,11 @@
-// import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { ICoin } from "../types/Coin";
 import {Helmet} from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../store/atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -19,14 +19,16 @@ const Header = styled.header`
   align-items: center;
 `;
 const CoinsList = styled.ul``;
+
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
   display: flex;
   align-items: center;
   padding: 10px;
+  border: 1px solid white;
   &:hover {
     a {
       color: ${(props) => props.theme.accentColor};
@@ -52,29 +54,23 @@ const Img = styled.img`
   height: 50px;
 `;
 
-function Coins() {
-  // const [coins, setCoins] = useState<CoinInterface[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch("https://api.coinpaprika.com/v1/coins");
-  //     const json = await response.json();
-  //     setCoins(json.slice(0, 50));
-  //     setLoading(false);
-  //   })();
-  // }, []);
 
+function Coins() {
   ///react query apply
   // useQuery(queryKey, fetchPosts)
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins,{refetchOnWindowFocus:false});
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
 
   return (
     <Container>
       <Helmet>
-        COin
+        Coin
       </Helmet>
       <Header>
         <Title>coins</Title>
+        <button onClick={toggleDarkAtom}>toggle</button>
       </Header>
       {
         <CoinsList>
@@ -87,7 +83,7 @@ function Coins() {
                   alt="img"
                   src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                 />
-                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+                <Link to={`/${coin.id}`} state={{ name: coin.name}}>
                   {coin.name} &rarr;
                 </Link>
               </Coin>

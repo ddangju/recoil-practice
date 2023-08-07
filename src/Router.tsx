@@ -8,22 +8,29 @@ import Chart from "./routes/Chart";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Coins />,
-  },
-  {
-    path: "/:coinId",
-    element: <Coin />,
-    children: [
+    element: <App />,
+    children:[
       {
-        path: "price",
-        element: <Price />,
+        path: "",
+        element:<Coins></Coins>
       },
       {
-        path: "chart",
-        element: <Chart/>,
+        path: "/:coinId",
+        element: <Coin />,
+        children: [
+          {
+            path: "price",
+            element: <Price />,
+          },
+          {
+            path: "chart",
+            element: <Chart/>,
+          },
+        ],
       },
-    ],
+    ]
   },
+
 ]);
 
 export default router;
