@@ -1,13 +1,11 @@
-// import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { ICoin } from "../types/Coin";
 import {Helmet} from "react-helmet";
-import { useOutletContext } from 'react-router-dom';
-
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../store/atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -56,20 +54,14 @@ const Img = styled.img`
   height: 50px;
 `;
 
-interface IToggle{
-  toggleDark: () => void,
-}
-interface ICoinProps {
-  isDark: boolean;
-}
 
 function Coins() {
-  const {toggleDark} = useOutletContext<IToggle>();
-  const {isDark} = useOutletContext<ICoinProps>();
-
   ///react query apply
   // useQuery(queryKey, fetchPosts)
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins,{refetchOnWindowFocus:false});
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
 
   return (
     <Container>
@@ -78,7 +70,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>coins</Title>
-        <button onClick={toggleDark}>toggle</button>
+        <button onClick={toggleDarkAtom}>toggle</button>
       </Header>
       {
         <CoinsList>
@@ -91,7 +83,7 @@ function Coins() {
                   alt="img"
                   src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                 />
-                <Link to={`/${coin.id}`} state={{ name: coin.name, isdark: isDark}}>
+                <Link to={`/${coin.id}`} state={{ name: coin.name}}>
                   {coin.name} &rarr;
                 </Link>
               </Coin>

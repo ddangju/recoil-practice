@@ -5,6 +5,9 @@ import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { RecoilRoot } from "recoil";
+
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,10 +20,11 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>
-      {/* <App /> */}
-      <ReactQueryDevtools initialIsOpen={false}/>
-
-  </QueryClientProvider>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router}></RouterProvider>
+    {/* <App /> */}
+    <ReactQueryDevtools initialIsOpen={false}/>
+    </QueryClientProvider>
+  </RecoilRoot>
 );

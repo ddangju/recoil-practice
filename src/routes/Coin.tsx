@@ -1,5 +1,4 @@
 import { useLocation, useParams, Link, Outlet, useMatch, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { InfoData, RouteState, PriceData } from "../types/CoinType";
 import { useQuery } from "react-query";
@@ -71,7 +70,6 @@ function Coin() {
   // const {isDark} = useOutletContext<ICoinProps>();
 
   const { state } = useLocation() as RouteState;
-  console.log(state,"<state")
 
 
 
@@ -132,7 +130,7 @@ function Coin() {
               <Link to="price">price</Link>
             </Tab>
             <Tab $isActive={chartMatch !== null}>
-              <Link to="chart" state={[coinId, state.isdark]}>chart</Link>
+              <Link to="chart" state={[coinId]}>chart</Link>
             </Tab>
           </Tabs>
         <Outlet></Outlet>
