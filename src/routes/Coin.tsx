@@ -1,9 +1,16 @@
-import { useLocation, useParams, Link, Outlet, useMatch, useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useParams,
+  Link,
+  Outlet,
+  useMatch,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 import { InfoData, RouteState, PriceData } from "../types/CoinType";
 import { useQuery } from "react-query";
 import { fetchCoin, fetchTickers } from "../api";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -64,35 +71,38 @@ const Tab = styled.span<{ $isActive: boolean }>`
     display: block;
   }
 `;
-
-
 function Coin() {
   // const {isDark} = useOutletContext<ICoinProps>();
 
   const { state } = useLocation() as RouteState;
 
-
-
   const { coinId } = useParams();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
   // const { isLoading, data } = useQuery<InfoData[]>(["info",coinId], fetchCoin(coinId),{refetchOnWindowFocus:false});
-// fetch함ㅅ에 인자가 필요하다면 아래왁 같이 작성해주어야함
-  const { isLoading:infoLoading, data:infoData } = useQuery<InfoData>(["info",coinId], () => fetchCoin(coinId));
-  const { isLoading:tickersLoading, data:tickersData } = useQuery<PriceData>(["tickers",coinId], () => fetchTickers(coinId));
-  
+  // fetch함ㅅ에 인자가 필요하다면 아래왁 같이 작성해주어야함
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoin(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ["tickers", coinId],
+    () => fetchTickers(coinId)
+  );
+
   const loading = infoLoading || tickersLoading;
 
-  const navigate = useNavigate()
-  const onClick = () =>{
-    navigate("/")
-  }
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate("/");
+  };
 
-  
   return (
     <Container>
       <Helmet>
-        <title>{state?.name ? state?.name : loading ? "Loading..." : infoData?.name}</title>
+        <title>
+          {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
+        </title>
       </Helmet>
       <Header>
         <button onClick={onClick}>back</button>
@@ -100,42 +110,43 @@ function Coin() {
           {state?.name ? state?.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
-        <Overview>
-          <OverviewItem>
-            <span>Rank:</span>
-            <span>{infoData?.rank}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Symbol:</span>
-            <span>${infoData?.symbol}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Price:</span>
-            <span>${tickersData?.quotes.USD.price.toFixed(0)}</span>
-          </OverviewItem>
-        </Overview>
-        <Description>{infoData?.description}</Description>
-        <Overview>
-          <OverviewItem>
-            <span>Total Supply:</span>
-            <span>{tickersData?.total_supply}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Max Supply:</span>
-            <span>{tickersData?.max_supply}</span>
-          </OverviewItem>
-        </Overview>
-        <Tabs>x
-            <Tab $isActive={priceMatch !== null}>
-              <Link to="price">price</Link>
-            </Tab>
-            <Tab $isActive={chartMatch !== null}>
-              <Link to="chart" state={[coinId]}>chart</Link>
-            </Tab>
-          </Tabs>
-        <Outlet></Outlet>
+      <Overview>
+        <OverviewItem>
+          <span>Rank:</span>
+          <span>{infoData?.rank}</span>
+        </OverviewItem>
+        <OverviewItem>
+          <span>Symbol:</span>
+          <span>${infoData?.symbol}</span>
+        </OverviewItem>
+        <OverviewItem>
+          <span>Price:</span>
+          <span>${tickersData?.quotes.USD.price.toFixed(0)}</span>
+        </OverviewItem>
+      </Overview>
+      <Description>{infoData?.description}</Description>
+      <Overview>
+        <OverviewItem>
+          <span>Total Supply:</span>
+          <span>{tickersData?.total_supply}</span>
+        </OverviewItem>
+        <OverviewItem>
+          <span>Max Supply:</span>
+          <span>{tickersData?.max_supply}</span>
+        </OverviewItem>
+      </Overview>
+      <Tabs>
+        <Tab $isActive={priceMatch !== null}>
+          <Link to="price">price</Link>
+        </Tab>
+        <Tab $isActive={chartMatch !== null}>
+          <Link to="chart" state={[coinId]}>
+            chart
+          </Link>
+        </Tab>
+      </Tabs>
+      <Outlet></Outlet>
     </Container>
-
   );
 }
 

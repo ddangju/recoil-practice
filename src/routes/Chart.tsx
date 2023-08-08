@@ -7,25 +7,26 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../store/atoms";
 
-export interface ChartProps{
+export interface ChartProps {
   coinId: string;
 }
 
 function Chart() {
-  const {state}  = useLocation();
-  const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", state[0]], () => fetchCoinHistory(state[0]))
+  const { state } = useLocation();
+  const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", state[0]], () =>
+    fetchCoinHistory(state[0])
+  );
   const [priceData, setPriceData] = useState<IHistorical[]>([]);
+
   const isDark = useRecoilValue(isDarkAtom);
 
-
-  useEffect(()=>{
-    if(!data){
-      return
-    }
-    else{
+  useEffect(() => {
+    if (!data) {
+      return;
+    } else {
       setPriceData(data);
     }
-  },[data])
+  }, [data]);
   return (
     <div>
       {isLoading ? (
@@ -74,7 +75,7 @@ function Chart() {
               y: {
                 formatter: (value) => `$${value.toFixed(2)}`,
               },
-            }
+            },
           }}
         />
       )}

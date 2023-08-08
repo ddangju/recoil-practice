@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { ICoin } from "../types/Coin";
-import {Helmet} from "react-helmet";
-import { useSetRecoilState } from "recoil";
+import { Helmet } from "react-helmet";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import { isDarkAtom } from "../store/atoms";
 
 const Container = styled.div`
@@ -26,6 +26,7 @@ const Coin = styled.li`
   margin-bottom: 10px;
   border-radius: 15px;
   display: flex;
+
   align-items: center;
   padding: 10px;
   border: 1px solid white;
@@ -54,20 +55,33 @@ const Img = styled.img`
   height: 50px;
 `;
 
-
 function Coins() {
   ///react query apply
   // useQuery(queryKey, fetchPosts)
-  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins,{refetchOnWindowFocus:false});
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins, {
+    refetchOnWindowFocus: false,
+  });
 
+  //1)useSetRecoilState //setState와 같이 동작한다
+  // const setDarkAtom = useSetRecoilState(isDarkAtom);
+  // const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
+  //2)useRecoilState //atom값을 가져올때
+  const [darkState, setDarkState] = useRecoilState<boolean | undefined>(
+    isDarkAtom
+  );
+
+  ///3) useRecoilValue
+  // const dark = useRecoilValue(isDarkAtom); //atom의 값을 가져올 때
+
+  const toggleDarkAtom = () => {
+    setDarkState(!darkState);
+    // setDarkState((pre: any) => console.log(pre) as any);
+  };
 
   return (
     <Container>
-      <Helmet>
-        Coin
-      </Helmet>
+      <Helmet>Coin</Helmet>
       <Header>
         <Title>coins</Title>
         <button onClick={toggleDarkAtom}>toggle</button>
@@ -83,7 +97,7 @@ function Coins() {
                   alt="img"
                   src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
                 />
-                <Link to={`/${coin.id}`} state={{ name: coin.name}}>
+                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
                   {coin.name} &rarr;
                 </Link>
               </Coin>

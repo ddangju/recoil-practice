@@ -1,3 +1,4 @@
+
 - React Hook Form
 - Typescript
 - Styled Components
@@ -5,3 +6,4 @@
 - React Query
 - Apex Charts(chart library)
 - Framer Motion
+
