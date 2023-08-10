@@ -1,30 +1,38 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import App from "./App";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
+import { darkTheme } from "./theme";
+import reset from "styled-reset";
 
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: true,
-    },
-  },
-});
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+const GlobalStyle = createGlobalStyle`
+${reset}
+  * {
+    box-sizing: border-box; 
+
+  }
+  body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.textColor};
+    line-height: 1;
+  }
+  a {
+    text-decoration:none;
+    color:inherit;
+  }
+`;
 root.render(
   <RecoilRoot>
-    <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router}></RouterProvider>
-    {/* <App /> */}
-    <ReactQueryDevtools initialIsOpen={false}/>
-    </QueryClientProvider>
+    <ThemeProvider theme={darkTheme}>
+      <GlobalStyle />
+      <RouterProvider router={router}></RouterProvider>
+    </ThemeProvider>
   </RecoilRoot>
 );
