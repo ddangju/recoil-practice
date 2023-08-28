@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import { toDoState } from "../store/atoms";
+import { useRecoilValue } from "recoil";
+import CreateToDo from "./CreateToDo";
+import ToDo from "./ToDo";
 
 function ToDoList() {
-  const [toDo, setToDo] = useState("");
-  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setToDo(value);
-  };
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(toDo);
-  };
+  const toDos = useRecoilValue(toDoState);
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input onChange={onChange} value={toDo} placeholder="Write a to do" />
-        <button>Add</button>
-      </form>
+      <h1>To Dos</h1>
+      <hr />
+      <CreateToDo></CreateToDo>
+      <ul>
+        {toDos.map((toDo) => (
+          <ToDo key={toDo.id} {...toDo} />
+        ))}
+      </ul>
     </div>
   );
 }
