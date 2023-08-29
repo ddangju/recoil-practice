@@ -3,14 +3,12 @@ import { IToDo, toDoState } from "../store/atoms";
 
 function ToDo(props: IToDo) {
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget.name);
-
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === props.id);
       const newToDo = {
         text: props.text,
         id: props.id,
-        category: event.currentTarget.name,
+        category: event.currentTarget.name as IToDo["category"],
       };
       return [
         ...oldToDos.slice(0, targetIndex),
@@ -56,6 +54,10 @@ export default ToDo;
 // setToDos((oldToDos) => {
 
 //   const targetIndex = oldToDos.findIndex((toDo) => toDo.id === props.id);
+///  let updated = [...oldToDos]
+///  updated[targetIndex] = {바꿀내용}
+///  return updated
+/////////////////////////////
 //   oldToDos[targetIndex] = {
 //     text: props.text,
 //     id: props.id,
