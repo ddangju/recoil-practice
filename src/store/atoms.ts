@@ -1,14 +1,21 @@
 import { atom, selector } from "recoil";
+
+export enum Categories {
+  TO_DO = "TO_DO",
+  DOING = "DOING",
+  DONE = "DONE",
+}
 export interface IToDo {
   text: string;
   id: number;
-  category: "TO_DO" | "DOING" | "DONE";
+  category: Categories;
 }
+
 //사용자가 현재 선택한 카테고리에 대한 state
 ///select state
-export const categoryState = atom({
+export const categoryState = atom<Categories>({
   key: "category",
-  default: "TO_DO",
+  default: Categories.TO_DO,
 });
 
 export const toDoState = atom<IToDo[]>({

@@ -1,7 +1,10 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { IToDo, toDoState } from "../store/atoms";
+import { Categories, IToDo, toDoState } from "../store/atoms";
 
 function ToDo(props: IToDo) {
+  const setToDos = useSetRecoilState(toDoState);
+  const toDo = useRecoilValue(toDoState);
+
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === props.id);
@@ -17,23 +20,27 @@ function ToDo(props: IToDo) {
       ];
     });
   };
-  const setToDos = useSetRecoilState(toDoState);
+  const onTodoDelete = () => {
+    const newToDo = toDo.filter((todo) => todo.id !== props.id);
+    setToDos(newToDo);
+  };
 
   return (
     <>
       <li>{props.text}</li>
-      {props.category !== "DOING" && (
-        <button name="DOING" onClick={onClick}>
+      <button onClick={onTodoDelete}>delete</button>
+      {props.category !== Categories.DOING && (
+        <button name={Categories.DOING} onClick={onClick}>
           Doing
         </button>
       )}
-      {props.category !== "TO_DO" && (
-        <button name="TO_DO" onClick={onClick}>
+      {props.category !== Categories.TO_DO && (
+        <button name={Categories.TO_DO} onClick={onClick}>
           To Do
         </button>
       )}
-      {props.category !== "DONE" && (
-        <button name="DONE" onClick={onClick}>
+      {props.category !== Categories.DONE && (
+        <button name={Categories.DONE} onClick={onClick}>
           Done
         </button>
       )}
@@ -85,3 +92,11 @@ export default ToDo;
 
 //   return updatedToDos;
 // });
+
+//4. 삭제기능
+// button을 클릭하면 event인자를 받아 toDo와 비교하려고 했지만 사실 해당 컴포넌트는
+// 특정 props의id값을 가지고 있었다.
+// 그렇기에 filter함수를 활용하여 props의 id값과 toDo의 배열을 비교하여 **같은 값이 아닌 값**만 return한다
+// 즉, 같은 값이면 새로운 배열에 포함하지 않는 것이다
+// 변수 newToDo에 return한 값은 setToDos에 업데이트 해준다.
+// 그렇게 화면에는 delete버튼을 클릭하면 삭제되는 것을 확인할 수 있따.
