@@ -36,3 +36,22 @@ export const toDoSelector = selector({
     return toDos.filter((toDo) => toDo.category === category);
   },
 });
+
+const localStorageEffect =
+  (key: string) =>
+  ({ setSelf, onSet }: any) => {
+    // != 비교 연산자는 null과 가튼 FALSTY한 값인지 비교
+    if (localStorage.setLocal !== null) {
+      const savedValue = localStorage.getItem(key);
+      savedValue && setSelf(JSON.parse(savedValue));
+    }
+    onSet((newValue: IToDo[], _: any, isReset: boolean) => {
+      localStorage.setItem(key, JSON.stringify(newValue));
+    });
+  };
+
+export const localStorageState = atom<IToDo[]>({
+  key: "toDoList",
+  default: [],
+  effects: [localStorageEffect("toDoList")],
+});

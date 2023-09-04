@@ -3,6 +3,7 @@ import {
   toDoSelector,
   categoryState,
   Categories,
+  localStorageState,
 } from "../store/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import CreateToDo from "./CreateToDo";
@@ -15,6 +16,7 @@ function ToDoList() {
   // const [todo, doing, done] = useRecoilValue(toDoSelector);
   // ✅state, setState 사용할때
   const [category, setCategory] = useRecoilState(categoryState);
+  const toDoLocalStorage = useRecoilValue(localStorageState);
   const toDos = useRecoilValue(toDoSelector);
 
   const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
@@ -30,7 +32,7 @@ function ToDoList() {
         <option value={Categories.DONE}>done</option>
       </select>
       <CreateToDo></CreateToDo>
-      {toDos?.map((toDo) => {
+      {toDoLocalStorage?.map((toDo) => {
         return <ToDo key={toDo.id} {...toDo} />;
       })}
     </div>

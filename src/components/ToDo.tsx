@@ -1,4 +1,4 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Categories, IToDo, toDoState } from "../store/atoms";
 
 function ToDo(props: IToDo) {
