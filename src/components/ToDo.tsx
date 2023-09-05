@@ -1,9 +1,16 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Categories, IToDo, toDoState } from "../store/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  Categories,
+  IToDo,
+  localStorageState,
+  toDoState,
+} from '../store/atoms';
 
 function ToDo(props: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
-  const toDo = useRecoilValue(toDoState);
+  // const toDo = useRecoilValue(toDoState);
+  const toDo = useRecoilValue(localStorageState);
+  const setLocalStorageList = useSetRecoilState(localStorageState);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setToDos((oldToDos) => {
@@ -11,7 +18,7 @@ function ToDo(props: IToDo) {
       const newToDo = {
         text: props.text,
         id: props.id,
-        category: event.currentTarget.name as IToDo["category"],
+        category: event.currentTarget.name as IToDo['category'],
       };
       return [
         ...oldToDos.slice(0, targetIndex),
@@ -22,7 +29,7 @@ function ToDo(props: IToDo) {
   };
   const onTodoDelete = () => {
     const newToDo = toDo.filter((todo) => todo.id !== props.id);
-    setToDos(newToDo);
+    setLocalStorageList(newToDo);
   };
 
   return (
